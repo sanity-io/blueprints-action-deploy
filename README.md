@@ -31,11 +31,9 @@ jobs:
         uses: actions/checkout@v3
       
       - name: Deploy blueprints
-        uses: sanity/runtime-deploy@v1
+        uses: sanity/runtime-actions@v1
         with:
           sanity_token: ${{ secrets.SANITY_AUTH_TOKEN }}
-          project_id: your-project-id
-          dataset: production
 ```
 
 ## Inputs
@@ -43,11 +41,8 @@ jobs:
 This action has the following configuration options:
 
 | Key | Required | Default   | Description |
-|-----|----------|-----------|-------------|
-| `sanity_token` | **Yes** | -         | Sanity API token with deploy permissions |
-| `project_id` | No | -         | Sanity project ID (can be inferred from blueprint config) |
-| `dataset` | No | `staging` | Sanity dataset name |
-| `blueprint_path` | No | `.`       | Path to the blueprint configuration |
+|-----|---------|-----------|-------------|
+| `sanity_token` | No      | -         | Sanity API token with deploy permissions |
 
 ## Examples
 
@@ -55,7 +50,7 @@ This action has the following configuration options:
 
 ```yaml
 - name: Deploy blueprints
-  uses: sanity/runtime-deploy@v1
+  uses: sanity/runtime-actions@v1
   with:
     sanity_token: ${{ secrets.SANITY_AUTH_TOKEN }}
 ```
@@ -64,21 +59,9 @@ This action has the following configuration options:
 
 ```yaml
 - name: Deploy to staging
-  uses: sanity/runtime-deploy@v1
+  uses: sanity/runtime-actions@v1
   with:
     sanity_token: ${{ secrets.SANITY_AUTH_TOKEN }}
-    project_id: abc123xyz
-    dataset: staging
-```
-
-### Deployment from custom path
-
-```yaml
-- name: Deploy from subdirectory
-  uses: sanity/runtime-deploy@v1
-  with:
-    sanity_token: ${{ secrets.SANITY_AUTH_TOKEN }}
-    blueprint_path: ./blueprints
 ```
 
 ## Setting up secrets

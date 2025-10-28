@@ -27558,35 +27558,25 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(7484);
 const exec = __nccwpck_require__(5236);
 
+// In the runtime cli it assumes the blueprints file is in the root and available.
+// Can the runtime cli take a path to the blueprints file? If so we can make that an input here too.
+
 async function run() {
   try {
-    // Get inputs
-    const sanityToken = core.getInput('sanity_token', { required: true });
-    const projectId = core.getInput('project_id');
-    const dataset = core.getInput('dataset');
-    const blueprintPath = core.getInput('blueprint_path');
+    // @I guess if we get from the ENV, we could skip the input requirement and document that it should be set as `SANITY_AUTH_TOKEN` in GHA env?
+    const sanityToken = process.env.SANITY_TOKEN || core.getInput('sanity_token', { required: true });
 
     core.info('Starting Sanity blueprints deployment...');
 
-    // Set Sanity token as environment variable
+    if (!process.env.SANITY_TOKEN) {
+        // if the user didn't set this in env, we set it here
+        process.env.SANITY_AUTH_TOKEN = sanityToken;
+    }
+
     core.exportVariable('SANITY_AUTH_TOKEN', sanityToken);
 
     // Build the command arguments
     const args = ['blueprints', 'deploy'];
-
-    // support for organization-level blueprints can be added here in the future
-    if (projectId) {
-      args.push('--project', projectId);
-    }
-
-    if (dataset) {
-      args.push('--dataset', dataset);
-    }
-
-    // @todo: support for --config flag could be added.
-    if (blueprintPath && blueprintPath !== '.') {
-      args.push('--path', blueprintPath);
-    }
 
     core.info(`Running: sanity ${args.join(' ')}`);
     await exec.exec('npx', ['@sanity/runtime-cli', ...args]);

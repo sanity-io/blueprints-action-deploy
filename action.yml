@@ -5,20 +5,10 @@ branding:
   color: 'red'
 
 inputs:
+  # This can be set as an ENV variable or passed directly
   sanity_token:
     description: 'Sanity API token with deploy permissions'
-    required: true
-  project_id:
-    description: 'Sanity project ID'
     required: false
-  dataset:
-    description: 'Sanity dataset name'
-    required: false
-    default: 'production'
-  blueprint_path:
-    description: 'Path to the blueprint configuration'
-    required: false
-    default: '.'
 
 runs:
   using: 'node20'

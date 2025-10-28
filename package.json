@@ -1,9 +1,11 @@
 {
-  "name": "@sanity/runtime-deploy",
+  "name": "@sanity/runtime-actions",
   "version": "0.0.1",
   "description": "GitHub Action to deploy Sanity blueprints using @sanity/runtime-cli",
   "main": "dist/index.js",
+  "private": false,
   "scripts": {
+    "build": "ncc build src/index.js -o dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -19,8 +21,9 @@
     "@actions/exec": "^1.1.1",
     "@sanity/runtime-cli": "latest"
   },
-  "private": true,
   "devDependencies": {
+    "@biomejs/biome": "2.3.2",
+    "@sanity/blueprints": "^0.3.0",
     "@vercel/ncc": "^0.38.4"
   }
 }
