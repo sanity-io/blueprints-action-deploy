@@ -6,7 +6,7 @@
   "private": false,
   "scripts": {
     "build": "ncc build src/index.js -o dist",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tap src/**/*.test.js"
   },
   "keywords": [
     "github-action",
@@ -23,7 +23,9 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.2",
-    "@sanity/blueprints": "^0.3.0",
-    "@vercel/ncc": "^0.38.4"
+    "@types/tap": "^15.0.12",
+    "@vercel/ncc": "^0.38.4",
+    "mock-require": "^3.0.3",
+    "tap": "^21.1.1"
   }
 }
