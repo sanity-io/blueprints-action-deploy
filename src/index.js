@@ -26,7 +26,7 @@ async function run() {
       args.push('--dataset', dataset);
     }
 
-    // @todo: support for --config could be added.
+    // @todo: support for --config flag could be added.
     if (blueprintPath && blueprintPath !== '.') {
       args.push('--path', blueprintPath);
     }

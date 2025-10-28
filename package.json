@@ -19,5 +19,8 @@
     "@actions/exec": "^1.1.1",
     "@sanity/runtime-cli": "latest"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@vercel/ncc": "^0.38.4"
+  }
 }
