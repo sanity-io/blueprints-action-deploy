@@ -1,20 +1,27 @@
 # Sanity Blueprints Deploy Action
 
-This is a GitHub Action that deploys Sanity blueprints using the [@sanity/runtime-cli](https://www.npmjs.com/package/@sanity/runtime-cli).
+A GitHub Action for deploying [Sanity Blueprints](https://www.sanity.io/docs/compute-and-ai/blueprints) to production using the [@sanity/runtime-cli](https://www.npmjs.com/package/@sanity/runtime-cli).
 
-## How does it work?
+## Overview
 
-When called, the action will:
+This action automates the deployment of your Sanity Blueprints by executing the `blueprints deploy` command with your specified configuration. Use it to deploy blueprints automatically on push, pull request merge, or manual workflow triggers.
 
-1. Execute the `blueprints deploy` command with the specified configuration
-2. Deploy your Sanity blueprint to the specified project and dataset
+### Prerequisites
 
-This assumes that you have already created a Blueprint config using the `npx sanity blueprint init` and created and mapped your Function.
-To see more about how this is done, read up on what [Blueprints](https://www.sanity.io/docs/compute-and-ai/blueprints) are. 
+Before using this action, you must:
 
-## Basic Usage
+1. **Initialize a Blueprint** in your Sanity project:
+   ```bash
+   npx @sanity/runtime-cli blueprints init
+   ```
 
-Typically, you will want to add this action as a step in your GitHub actions workflow. Here's an example:
+2. **Create and map your Function** according to the [Blueprints documentation](https://www.sanity.io/docs/compute-and-ai/blueprints)
+
+3. **Obtain your Blueprint configuration** (see [Getting Configuration Values](#getting-configuration-values) below)
+
+## Usage
+
+Add this action to your GitHub Actions workflow file (e.g., `.github/workflows/deploy.yml`):
 
 ```yaml
 name: Deploy Sanity Blueprints
@@ -29,10 +36,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v5
       
-      - name: Setup nodejs  
+      - name: Setup Node.js  
         uses: actions/setup-node@v6
         with:
           node-version: '24'
@@ -45,53 +52,103 @@ jobs:
           project_id: '1234xyz'
 ```
 
-## Inputs
+### Deploy to Organization
 
-This action has the following configuration options:
+Alternatively, deploy to an organization instead of a specific project:
 
-| Key | Required | Default | Description                                                     |
-|-----|---------|---|-----------------------------------------------------------------|
-| `sanity_token` | **Yes** | - | Sanity API token with deploy permissions.                       |
-| `stack_id` | **Yes** | - | Blueprint stack ID to interact with                             |
-| `organization_id` | No | - | Sanity Organization ID (required if project_id is not provided) |
-| `project_id` | No | - | Sanity Project ID (required if project_id is not provided) |
+```yaml
+- name: Deploy blueprints
+  uses: sanity/runtime-actions@v1
+  with:
+    sanity_token: ${{ secrets.SANITY_AUTH_TOKEN }}
+    stack_id: 'ST_1234xyz'
+    organization_id: 'abc123'
+```
 
-## Setting up secrets
+## Configuration
 
-1. Go to your GitHub repository settings
-2. Navigate to **Secrets and variables** → **Actions**
-3. Click **New repository secret**
-4. Add `SANITY_AUTH_TOKEN` with your Sanity API token
+### Inputs
 
-To create a Sanity API token:
-1. Go to [manage.sanity.io](https://manage.sanity.io)
-2. Select your project
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `sanity_token` | **Yes** | Sanity API token with deploy permissions |
+| `stack_id` | **Yes** | Blueprint stack ID (e.g., `ST_1234xyz`) |
+| `project_id` | Conditional* | Sanity project ID |
+| `organization_id` | Conditional* | Sanity organization ID |
+
+*Either `project_id` **or** `organization_id` must be provided.
+
+### Outputs
+
+| Output | Description |
+|--------|-------------|
+| `deployment_status` | Status of the deployment |
+
+## Setup
+
+### 1. Create a Sanity API Token
+
+1. Navigate to [manage.sanity.io](https://manage.sanity.io)
+2. Select your project or organization
 3. Go to **API** → **Tokens**
-4. Create a token with appropriate deploy permissions
+4. Click **Add API token**
+5. Create a token with deploy permissions
+6. Copy the token (you won't be able to see it again)
 
-## Getting your Blueprints configuration 
+### 2. Add Token to GitHub Secrets
 
-In the current repo where you manage your Sanity project run `npx @sanity/runtime-cli blueprints config`
-Your output should look similar to:
+1. Go to your GitHub repository
+2. Navigate to **Settings** → **Secrets and variables** → **Actions**
+3. Click **New repository secret**
+4. Name: `SANITY_TOKEN`
+5. Value: Paste your Sanity API token
+6. Click **Add secret**
 
-```shell
+### 3. Getting Configuration Values
+
+#### Option 1: Using the CLI
+
+Run this command in your Sanity project directory:
+
+```bash
+npx @sanity/runtime-cli blueprints config
+```
+
+Output:
+```
 Current configuration:
   Sanity Project: <project_id>
   Deployment ID:  <stack_id>
 ```
 
-Likewise, your `project_id` and `organization_id` can be found in the `.sanity/blueprint.config.json` at the top level of your repo:
+#### Option 2: From Configuration File
+
+Check `.sanity/blueprint.config.json` in your project root:
 
 ```json
 {
   "projectId": "<project_id>",
-  "blueprintConfigVersion": "",
-  "updatedAt": "",
-  "organizationId": "<organization_id>"
+  "organizationId": "<organization_id>",
+  "blueprintConfigVersion": "...",
+  "updatedAt": "..."
 }
 ```
 
+Use these values in your workflow configuration.
+
+## Resources
+
+- [Sanity Blueprints Documentation](https://www.sanity.io/docs/compute-and-ai/blueprints)
+- [@sanity/runtime-cli on npm](https://www.npmjs.com/package/@sanity/runtime-cli)
+- [GitHub Actions Documentation](https://docs.github.com/en/actions)
+
+## Support
+
+For issues and questions:
+- Check the [Sanity documentation](https://www.sanity.io/docs)
+- Visit the [Sanity community](https://www.sanity.io/community)
+- Open an issue in this repository
 
 ## License
 
-MIT License. See the [LICENSE](LICENSE) file for details.
+MIT License. See [LICENSE](LICENSE) for details.
