@@ -9,7 +9,16 @@ inputs:
   sanity_token:
     description: 'Sanity API token with deploy permissions'
     required: false
+  project_id:
+    description: 'Sanity project ID'
+    required: false
+  organization_id:
+    description: 'Sanity organization ID'
+    required: false
+  stack_id:
+    description: 'Blueprint stack ID'
+    required: true
 
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'
