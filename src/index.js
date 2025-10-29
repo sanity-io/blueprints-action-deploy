@@ -21,7 +21,7 @@ async function run() {
     core.exportVariable('SANITY_AUTH_TOKEN', sanityToken)
     core.exportVariable('SANITY_BLUEPRINT_STACK_ID', stackId)
     // There are specifics to how the CLI interprets these variables.
-    // Set all them if provided and let the CLI sort out proper precedence.
+    // Set out all them if provided and let the CLI sort out proper precedence.
     if (orgId) core.exportVariable('SANITY_ORGANIZATION_ID', orgId)
     if (projectId) core.exportVariable('SANITY_PROJECT_ID', projectId)
 

@@ -1,6 +1,4 @@
 .idea
 .vscode
 
-# Setting this here for local testing. Setting a `SANITY_TOKEN` will allow us to run commands using https://nektosact.com/usage/index.html
-.env
 node_modules

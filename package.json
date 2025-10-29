@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "private": false,
   "scripts": {
-    "build": "ncc build src/index.js -o dist",
+    "build": "ncc build --minify --no-source-map-register --no-cache src/index.js -o dist",
     "test": "tap --show-full-coverage --include=test/**/*.test.js"
   },
   "keywords": [
