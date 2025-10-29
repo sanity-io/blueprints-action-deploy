@@ -18,12 +18,10 @@
   ],
   "dependencies": {
     "@actions/core": "^1.11.1",
-    "@actions/exec": "^1.1.1",
-    "@sanity/runtime-cli": "latest"
+    "@actions/exec": "^1.1.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.2",
-    "@types/tap": "^15.0.12",
     "@vercel/ncc": "^0.38.4",
     "mock-require": "^3.0.3",
     "tap": "^21.1.1"
