@@ -5,7 +5,6 @@ branding:
   color: 'blue'
 
 inputs:
-  # This can be set as an ENV variable or passed directly
   sanity_token:
     description: 'Sanity API token with deploy permissions'
     required: true
@@ -22,7 +21,32 @@ inputs:
 outputs:
   deployment_status:
     description: 'Status of the deployment'
+    value: ${{ steps.deploy.outputs.status }}
 
 runs:
-  using: 'node24'
-  main: 'dist/index.js'
+  using: 'composite'
+  steps:
+    - name: Validate inputs
+      shell: bash
+      run: |
+        if [ -z "${{ inputs.organization_id }}" ] && [ -z "${{ inputs.project_id }}" ]; then
+          echo "‼️Missing either a \`project_id\` or an \`organization_id\`."
+          exit 1
+        fi
+
+    - name: Deploy blueprints
+      id: deploy
+      shell: bash
+      env:
+        SANITY_AUTH_TOKEN: ${{ inputs.sanity_token }}
+        SANITY_BLUEPRINT_STACK_ID: ${{ inputs.stack_id }}
+        SANITY_ORGANIZATION_ID: ${{ inputs.organization_id }}
+        SANITY_PROJECT_ID: ${{ inputs.project_id }}
+      run: |
+        echo "Starting Sanity blueprints deployment..."
+        echo "Running: sanity blueprints deploy"
+        
+        npx @sanity/runtime-cli blueprints deploy
+        
+        echo "✅ Blueprints deployed successfully!"
+        echo "status=success" >> $GITHUB_OUTPUT
