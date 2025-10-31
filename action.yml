@@ -1,0 +1,60 @@
+name: 'Sanity Runtime Deploy'
+description: 'Deploy Sanity blueprints using the @sanity/runtime-cli'
+branding:
+  icon: 'upload-cloud'
+  color: 'blue'
+
+inputs:
+  sanity_token:
+    description: 'Sanity API token with deploy permissions'
+    required: true
+  project_id:
+    description: 'Sanity project ID (required if organization_id is not provided)'
+    required: false
+  organization_id:
+    description: 'Sanity organization ID (required if project_id is not provided)'
+    required: false
+  stack_id:
+    description: 'Blueprint stack ID to interact with'
+    required: true
+
+outputs:
+  deployment_status:
+    description: 'Status of the deployment'
+    value: ${{ steps.deploy.outputs.status }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v5
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version: '24'
+
+    - name: Validate inputs
+      shell: bash
+      run: |
+        if [ -z "${{ inputs.organization_id }}" ] && [ -z "${{ inputs.project_id }}" ]; then
+          echo "‼️Missing either a \`project_id\` or an \`organization_id\`."
+          exit 1
+        fi
+
+    - name: Deploy blueprints
+      id: deploy
+      shell: bash
+      env:
+        SANITY_AUTH_TOKEN: ${{ inputs.sanity_token }}
+        SANITY_BLUEPRINT_STACK_ID: ${{ inputs.stack_id }}
+        SANITY_ORGANIZATION_ID: ${{ inputs.organization_id }}
+        SANITY_PROJECT_ID: ${{ inputs.project_id }}
+      run: |
+        echo "Starting Sanity blueprints deployment..."
+        echo "Running: sanity blueprints deploy"g
+        
+        npx -y @sanity/runtime-cli blueprints deploy
+        
+        echo "✅ Blueprints deployed successfully!"
+        echo "status=success" >> $GITHUB_OUTPUT
