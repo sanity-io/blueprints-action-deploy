@@ -29,6 +29,7 @@ jobs:
       - uses: googleapis/release-please-action@v4
         id: release
         with:
+          release-type: 'simple'
           token: '${{ steps.app-token.outputs.token }}'
 
       # This action will create a release PR when regular conventional commits are pushed to main
