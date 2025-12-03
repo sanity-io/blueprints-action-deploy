@@ -1,4 +1,4 @@
-name: 'Sanity Runtime Deploy'
+name: 'Sanity Blueprints Deploy Action'
 description: 'Deploy Sanity blueprints using the @sanity/runtime-cli'
 branding:
   icon: 'upload-cloud'
