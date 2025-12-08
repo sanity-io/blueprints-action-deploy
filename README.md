@@ -30,7 +30,6 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   deploy:
@@ -39,9 +38,9 @@ jobs:
       - name: Deploy blueprints
         uses: sanity-io/blueprints-action-deploy@v1
         with:
-          sanity_token: ${{ secrets.SANITY_AUTH_TOKEN }}
-          stack_id: 'ST_1234xyz'
-          project_id: '1234xyz'
+          sanity-token: ${{ secrets.SANITY_TOKEN }}
+          stack-id: 'ST_1234xyz'
+          project-id: '1234xyz'
 ```
 
 ### Deploy to Organization
@@ -52,29 +51,42 @@ Alternatively, deploy to an organization instead of a specific project:
 - name: Deploy blueprints
   uses: sanity-io/blueprints-action-deploy@v1
   with:
-    sanity_token: ${{ secrets.SANITY_AUTH_TOKEN }}
-    stack_id: 'ST_1234xyz'
-    organization_id: 'abc123'
+    sanity-token: ${{ secrets.SANITY_TOKEN }}
+    stack-id: 'ST_1234xyz'
+    organization-id: 'abc123'
+```
+
+If you have your blueprint files in a specific directory, specify the `working-directory` input:
+```yaml
+
+- name: Deploy blueprints
+  uses: sanity-io/blueprints-action-deploy@v1
+  with:
+    sanity-token: ${{ secrets.SANITY_TOKEN }}
+    stack-id: 'ST_1234xyz'
+    project-id: '1234xyz'
+    working-directory: './dir/to/blueprint/files'
 ```
 
 ## Configuration
 
 ### Inputs
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `sanity_token` | **Yes** | Sanity API token with deploy permissions |
-| `stack_id` | **Yes** | Blueprint stack ID (e.g., `ST_1234xyz`) |
-| `project_id` | Conditional* | Sanity project ID |
-| `organization_id` | Conditional* | Sanity organization ID |
+| Parameter             | Required     | Description                                              |
+|-----------------------|--------------|----------------------------------------------------------|
+| `sanity-token`        | **Yes**      | Sanity API token with deploy permissions                 |
+| `stack-id`            | **Yes**      | Blueprint stack ID (e.g., `ST_1234xyz`)                  |
+| `project-id`          | Conditional* | Sanity project ID                                        |
+| `organization-id`     | Conditional* | Sanity organization ID                                   |
+| `working-directory`   | No           | Path to the directory containing your blueprint files (sanity.blueprint.ts, functions/). Defaults to repository root |
 
-*Either `project_id` **or** `organization_id` must be provided.
+*Either `project-id` **or** `organization-id` must be provided.
 
 ### Outputs
 
 | Output | Description |
 |--------|-------------|
-| `deployment_status` | Status of the deployment |
+| `deployment-status` | Status of the deployment |
 
 ## Setup
 
