@@ -1,19 +1,9 @@
 name: 'Test CLI Action'
 on:
   workflow_dispatch:
-    ## Future input to test against different environments
-   #inputs:
-    #environment:
-      #description: 'Environment to test CLI against'
-      #required: false
-      #default: 'staging'
-      #type: choice
-      #options:
-        #- staging
-        #- production
 
 # set staging flag to always hit sanity.work
-# can leverage input above in future to test prod
+# can leverage input in the future to toggle between staging and prod
 env:
   SANITY_INTERNAL_ENV: 'staging'
 
