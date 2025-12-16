@@ -2,9 +2,28 @@ name: Test Plan Action
 on: pull_request
 env:
   SANITY_INTERNAL_ENV: 'staging'
-## TODO: coming soon ...
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Running integration test for Sanity Blueprints Plan Action"
+
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./tests/plan
+
+      - name: Integration Test - Deploy Staging Blueprint
+        uses: ./plan
+        with:
+          sanity-token: ${{ secrets.SANITY_TOKEN }}
+          stack-id: ${{ secrets.STACK_ID }}
+          project-id: ${{ secrets.PROJECT_ID }}
+          organization-id: ${{ secrets.ORGANIZATION_ID }}
+          working-directory: "./tests/plan"
