@@ -153,6 +153,10 @@ For issues and questions:
 - Visit the [Sanity community](https://www.sanity.io/community)
 - Open an issue in this repository
 
+## Contributing
+### Tests
+see [TESTING](/docs/testing.md) for details.
+
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.
