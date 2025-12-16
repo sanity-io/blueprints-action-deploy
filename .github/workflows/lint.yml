@@ -11,7 +11,7 @@ jobs:
         id: validate
         run: |
           npm install -g ajv-cli ajv-formats js-yaml
-          curl -o action-schema.json https://www.schemastore.org/github-action.json
+          curl -fsSL -o action-schema.json https://www.schemastore.org/github-action.json
           echo "Validating against schema..."
           ajv validate \
               --all-errors \
