@@ -1,4 +1,4 @@
-name: Test Action
+name: Test Deploy Action
 on: pull_request
 
 env:
@@ -21,7 +21,7 @@ jobs:
         working-directory: ./tests
 
       - name: Integration Test - Deploy Staging Blueprint
-        uses: ./
+        uses: ./deploy
         with:
           sanity-token: ${{ secrets.SANITY_TOKEN }}
           stack-id: ${{ secrets.STACK_ID }}

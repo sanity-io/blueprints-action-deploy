@@ -1,0 +1,10 @@
+name: Test Plan Action
+on: pull_request
+env:
+  SANITY_INTERNAL_ENV: 'staging'
+## TODO: coming soon ...
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Running integration test for Sanity Blueprints Plan Action"
