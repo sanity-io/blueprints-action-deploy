@@ -81,9 +81,7 @@ runs:
             ## Sanity Blueprints Deployment Plan
             <details>
               <summary>View planned changes</summary>
-              \`\`\`
-              ${planOutput}
-              \`\`\`
+              <pre>${planOutput}</pre>
             </details>
           `;
 
