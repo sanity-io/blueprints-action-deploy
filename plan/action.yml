@@ -75,13 +75,16 @@ runs:
       with:
         script: |
           const planOutput = `${{ steps.plan.outputs.result }}`;
-          console.log("Plan Output!!", planOutput);
           const prNumber = context.issue.number;
           
           const commentBody = `
             ## Sanity Blueprints Deployment Plan
-            The following changes are planned for the Sanity blueprints deployment:
-            ${planOutput}
+            <details>
+              <summary>View planned changes</summary>
+              \`\`\`
+              ${planOutput}
+              \`\`\`
+            </details>
           `;
 
           await github.rest.issues.createComment({
