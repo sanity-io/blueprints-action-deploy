@@ -18,7 +18,7 @@ inputs:
     description: 'Blueprint stack ID to interact with'
     required: true
   working-directory:
-    description: 'Working directory to run the deployment in'
+    description: 'Working directory that contains your blueprints and functions'
     required: false
     default: '.'
 

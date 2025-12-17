@@ -27,4 +27,4 @@ jobs:
           stack-id: ${{ secrets.STACK_ID }}
           project-id: ${{ secrets.PROJECT_ID }}
           organization-id: ${{ secrets.ORGANIZATION_ID }}
-          working-directory: "./tests"
+          working-directory: "./tests/deploy"
