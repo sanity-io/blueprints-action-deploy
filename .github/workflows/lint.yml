@@ -1,13 +1,21 @@
 name: 'Validate GitHub Deploy Action'
-on: pull_request
+on:
+  pull_request:
+    paths:
+      - 'deploy/**'
+      - 'plan/**'
+      - '.github/workflows/lint.yml'
 
 jobs:
   lint:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+          action: [ deploy, plan ]
     steps:
       - uses: actions/checkout@v5
 
-      - name: Validate deploy/action.yml file
+      - name: Validate ${{ matrix.action }}/action files
         id: validate
         run: |
           npm install -g ajv-cli ajv-formats js-yaml
@@ -17,7 +25,7 @@ jobs:
               --all-errors \
               --verbose \
               -s action-schema.json \
-              -d ./deploy/action.yml || {
+              -d ./${{ matrix.action }}/action.yml || {
                 echo "";
                 echo "✗ Schema validation failed.";
                 exit 1;

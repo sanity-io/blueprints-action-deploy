@@ -1,0 +1,42 @@
+name: Test Deploy Action
+on:
+  pull_request:
+    paths:
+      - 'deploy/**'
+      - 'plan/**'
+      - 'tests/**'
+      - '.github/workflows/test.yml'
+
+env:
+  SANITY_INTERNAL_ENV: 'staging'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        action: [ deploy, plan ]
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - run: echo "Running integration test for ${{ matrix.action }} action"
+
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./tests/${{ matrix.action }}
+
+      - name: Integration Test
+        uses: ./${{ matrix.action }}
+        with:
+          sanity-token: ${{ secrets.SANITY_TOKEN }}
+          stack-id: ${{ secrets.STACK_ID }}
+          project-id: ${{ secrets.PROJECT_ID }}
+          organization-id: ${{ secrets.ORGANIZATION_ID }}
+          working-directory: "./tests/${{ matrix.action }}"
