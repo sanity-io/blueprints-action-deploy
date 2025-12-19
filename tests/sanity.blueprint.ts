@@ -1,7 +1,6 @@
 import {
     defineBlueprint,
     defineDocumentFunction,
-    defineMediaLibraryAssetFunction,
     defineDocumentWebhook,
     defineDataset,
     defineCorsOrigin,
@@ -22,18 +21,6 @@ export default defineBlueprint({
                 resource: {
                     type: 'dataset',
                     id: `${process.env.SANITY_PROJECT_ID}.*`
-                }
-            }
-        }),
-        defineMediaLibraryAssetFunction({
-            name: 'media-library-handler',
-            type: 'sanity.function.media-library.asset',
-            event: {
-                on: ["create"],
-                projection: "{_id, mimeType, size}",
-                resource: {
-                    type: 'media-library',
-                    id: process.env.SANITY_PROJECT_ID
                 }
             }
         }),
@@ -62,15 +49,19 @@ export default defineBlueprint({
             project: process.env.SANITY_PROJECT_ID,
         }),
         defineRole({
-            name: 'testing',
-            title: 'Tester',
-            description: 'A test role for viewing content',
+            name: 'custom-role',
+            title: 'Custom Role',
+            description: 'A test role',
             appliesToUsers: true,
             appliesToRobots: false,
             permissions: [
                 {
                     name: 'sanity-all-documents',
-                    action: 'mode',
+                    action: "mode",
+                    params: {
+                        mode: "publish",
+                        history: true
+                    }
                 },
             ],
         }),
