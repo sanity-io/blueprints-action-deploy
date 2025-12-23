@@ -1,16 +1,23 @@
-name: 'Manual Blueprint Deployment Action'
+name: Test Plan Action
 on:
-  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'plan/**'
+      - 'tests/**'
+      - '.github/workflows/test.yml'
 
-# set staging flag to always hit sanity.work
-# can leverage input in the future to toggle between staging and prod
 env:
   SANITY_INTERNAL_ENV: 'staging'
 
 jobs:
-  dispatch:
+  test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
+      - run: echo "Running integration test for plan action"
+
       - uses: actions/checkout@v5
 
       - uses: actions/setup-node@v6
@@ -19,14 +26,13 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-        working-directory: ./tests/deploy
+        working-directory: ./tests/plan
 
-      - name: Deploy Blueprint to sanity.work
-        uses: ./deploy
+      - name: Integration Test
+        uses: ./plan
         with:
           sanity-token: ${{ secrets.SANITY_TOKEN }}
           stack-id: ${{ secrets.STACK_ID }}
           project-id: ${{ secrets.PROJECT_ID }}
           organization-id: ${{ secrets.ORGANIZATION_ID }}
-          working-directory: "./tests/deploy"
-
+          working-directory: "./tests/plan"

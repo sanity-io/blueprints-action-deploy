@@ -1,14 +1,16 @@
-# Sanity Blueprints Deploy Action
-
-A GitHub Action for deploying [Sanity Blueprints](https://www.sanity.io/docs/compute-and-ai/blueprints) to production using the [@sanity/runtime-cli](https://www.npmjs.com/package/@sanity/runtime-cli).
+# Sanity Blueprints Actions
+A suite of GitHub Actions for interacting with [Sanity Blueprints](https://www.sanity.io/docs/compute-and-ai/blueprints) using the [@sanity/runtime-cli](https://www.npmjs.com/package/@sanity/runtime-cli).
 
 ## Overview
+This action automates working with your Sanity Blueprints by executing a set of `blueprints` commands with your specified configuration.
 
-This action automates the deployment of your Sanity Blueprints by executing the `blueprints deploy` command with your specified configuration. Use it to deploy blueprints automatically on push, pull request merge, or manual workflow triggers.
+**Currently supported commands:**
+- [blueprints-actions/deploy](deploy/README.md): Deploy your blueprints to a Sanity project or organization.
+- [blueprints-actions/plan](plan/README.md): Shows changes that would be applied on your next deploy.
 
 ### Prerequisites
 
-Before using this action, you must:
+Before using these actions, you must:
 
 1. **Initialize a Blueprint** in your Sanity project:
    ```bash
@@ -19,74 +21,20 @@ Before using this action, you must:
 
 3. **Obtain your Blueprint configuration** (see [Getting Configuration Values](#getting-configuration-values) below)
 
-## Usage
-
-Add this action to your GitHub Actions workflow file (e.g., `.github/workflows/deploy.yml`):
-
-```yaml
-name: Deploy Sanity Blueprints
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy blueprints
-        uses: sanity-io/blueprints-action-deploy@v1
-        with:
-          sanity-token: ${{ secrets.SANITY_TOKEN }}
-          stack-id: 'ST_1234xyz'
-          project-id: '1234xyz'
-```
-
-### Deploy to Organization
-
-Alternatively, deploy to an organization instead of a specific project:
-
-```yaml
-- name: Deploy blueprints
-  uses: sanity-io/blueprints-action-deploy@v1
-  with:
-    sanity-token: ${{ secrets.SANITY_TOKEN }}
-    stack-id: 'ST_1234xyz'
-    organization-id: 'abc123'
-```
-
-If you have your blueprint files in a specific directory, specify the `working-directory` input:
-```yaml
-
-- name: Deploy blueprints
-  uses: sanity-io/blueprints-action-deploy@v1
-  with:
-    sanity-token: ${{ secrets.SANITY_TOKEN }}
-    stack-id: 'ST_1234xyz'
-    project-id: '1234xyz'
-    working-directory: './dir/to/blueprint/files'
-```
 
 ## Configuration
 
 ### Inputs
 
-| Parameter             | Required     | Description                                              |
-|-----------------------|--------------|----------------------------------------------------------|
-| `sanity-token`        | **Yes**      | Sanity API token with deploy permissions                 |
-| `stack-id`            | **Yes**      | Blueprint stack ID (e.g., `ST_1234xyz`)                  |
-| `project-id`          | Conditional* | Sanity project ID                                        |
-| `organization-id`     | Conditional* | Sanity organization ID                                   |
+| Parameter             | Required     | Description                                                                                                          |
+|-----------------------|--------------|----------------------------------------------------------------------------------------------------------------------|
+| `sanity-token`        | **Yes**      | Sanity API token with appropriate permissions                                                                        |
+| `stack-id`            | **Yes**      | Blueprint stack ID (e.g., `ST_1234xyz`)                                                                              |
+| `project-id`          | Conditional* | Sanity project ID                                                                                                    |
+| `organization-id`     | Conditional* | Sanity organization ID                                                                                               |
 | `working-directory`   | No           | Path to the directory containing your blueprint files (sanity.blueprint.ts, functions/). Defaults to repository root |
 
 *Either `project-id` **or** `organization-id` must be provided.
-
-### Outputs
-
-| Output | Description |
-|--------|-------------|
-| `deployment-status` | Status of the deployment |
 
 ## Setup
 
@@ -156,7 +104,8 @@ For issues and questions:
 ## Contributing
 
 ### Tests
-see [testing](docs/testing.md) for details.
+
+See [testing](docs/testing.md) for details.
 
 ## License
 

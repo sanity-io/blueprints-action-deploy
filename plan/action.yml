@@ -1,12 +1,12 @@
-name: 'Sanity Blueprints Deploy Action'
-description: 'Deploy Sanity blueprints using the @sanity/runtime-cli'
+name: 'Sanity Blueprints Plan Action'
+description: 'Show Sanity blueprints plans using the @sanity/runtime-cli'
 branding:
-  icon: 'upload-cloud'
-  color: 'blue'
+  icon: 'edit-3'
+  color: 'purple'
 
 inputs:
   sanity-token:
-    description: 'Sanity API token with deploy permissions'
+    description: 'Sanity API token with permissions'
     required: true
   project-id:
     description: 'Sanity project ID (required if organization-id is not provided)'
@@ -18,17 +18,18 @@ inputs:
     description: 'Blueprint stack ID to interact with'
     required: true
   working-directory:
-    description: 'Working directory to run the deployment in'
+    description: 'Working directory that contains your blueprints and functions'
     required: false
     default: '.'
 
 outputs:
-  deployment-status:
-    description: 'Status of the deployment'
-    value: ${{ steps.deploy.outputs.status }}
+  plan:
+    description: 'Output of the blueprints plan'
+    value: ${{ steps.plan.outputs.result }}
 
 runs:
   using: 'composite'
+
   steps:
     - name: Checkout repository
       uses: actions/checkout@v5
@@ -44,7 +45,7 @@ runs:
       shell: bash
       run: |
         npm install @sanity/blueprints @sanity/functions
-
+        
     - name: Validate inputs
       shell: bash
       run: |
@@ -53,8 +54,8 @@ runs:
           exit 1
         fi
 
-    - name: Deploy blueprints
-      id: deploy
+    - name: Plan Changes
+      id: plan
       shell: bash
       working-directory: ${{ inputs.working-directory || '.' }}
       env:
@@ -63,9 +64,31 @@ runs:
         SANITY_ORGANIZATION_ID: ${{ inputs.organization-id }}
         SANITY_PROJECT_ID: ${{ inputs.project-id }}
       run: |
-        echo "Starting Sanity Blueprints deployment..."
-        
-        npx -y @sanity/runtime-cli blueprints deploy
-        
-        echo "✅ Blueprints deployed successfully!"
-        echo "status=success" >> $GITHUB_OUTPUT
+        echo "Running sanity blueprints plan..."
+        PLAN_OUTPUT=$(npx -y @sanity/runtime-cli blueprints plan)
+        echo "result<<EOF" >> $GITHUB_OUTPUT
+        echo "$PLAN_OUTPUT" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+
+    - name: Output Plan Details To PR Comment
+      uses: actions/github-script@v8
+      with:
+        script: |
+          const planOutput = `${{ steps.plan.outputs.result }}`;
+          const prNumber = context.issue.number;
+          
+          const commentBody = `
+            ## Sanity Blueprints Deployment Plan
+            <details>
+              <summary>View planned changes</summary>
+              <pre>${planOutput}</pre>
+            </details>
+          `;
+
+          await github.rest.issues.createComment({
+            ...context.repo,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: prNumber,
+            body: commentBody,
+          });
