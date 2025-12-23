@@ -4,11 +4,12 @@ This document outlines the testing strategy and workflows for the Sanity Bluepri
 
 ## Overview
 
-The action is tested through three automated GitHub Actions workflows that validate different aspects of the deployment process:
+The action is tested through four automated GitHub Actions workflows that validate different aspects of the deployment process:
 
 1. **Action Schema Validation** (`.github/workflows/lint.yml`)
 2. **Integration Testing** (`.github/workflows/test.yml`)
 3. **Manual Staging Testing** (`.github/workflows/stage.yml`)
+4. **Daily Automated Testing** (`.github/workflows/daily-test.yml`)
 
 All tests run against the staging environment (`sanity.work`).
 
@@ -102,15 +103,52 @@ All tests run against the staging environment (`sanity.work`).
 
 ---
 
+### 4. Daily Automated Testing (`daily-test.yml`)
+
+**Trigger:** 
+- Scheduled cron (daily at 9:00 AM UTC)
+- Manual workflow dispatch
+
+**Purpose:** Provides continuous validation of the CLI action against staging to catch regressions early.
+
+**Environment:**
+- `SANITY_INTERNAL_ENV: 'staging'` - Routes all calls to `sanity.work`
+
+**What it tests:**
+- Continuous verification of cli functionality
+- Validates current resource types: functions, webhooks, datasets, CORS, roles
+
+**Secrets required:**
+- `SANITY_TOKEN` - Staging API token
+- `STACK_ID` - Test stack ID
+- `PROJECT_ID` - Test project ID
+- `ORGANIZATION_ID` - Test organization ID
+- `SLACK_WEBHOOK_URL` - Slack webhook for notifications
+
+---
+
 ## Test Environment Setup
 
 ### Test Directory Structure
 
 ```
 tests/
-├── functions/             # Test function implementations
-└── sanity.blueprint.ts    # Test blueprint definition
+├── functions/
+│   ├── integration-test/          # Document event function
+│   └── media-library-handler/    # Media library asset function
+└── sanity.blueprint.ts            # Test blueprint with all resource types
 ```
+
+### Test Resources
+
+The test blueprint (`sanity.blueprint.ts`) includes comprehensive examples of all supported resource types:
+
+- **Document Functions**: Event handlers for document create/update/delete
+- **Media Library Functions**: Handlers for media library asset events
+- **Webhooks**: Document webhooks for external notifications
+- **Datasets**: Dataset resource definitions
+- **CORS Origins**: CORS configuration
+- **Roles**: Custom access control roles
 
 ### Required Secrets
 

@@ -1,8 +1,8 @@
 {
   "devDependencies": {
-    "@sanity/cli": "^4.12.0",
-    "@sanity/blueprints": "^0.3.0",
-    "@sanity/functions": "^1.0.3",
-    "sanity": "^4.12.0"
+    "@sanity/cli": "^5.0.1",
+    "@sanity/blueprints": "^0.7.1",
+    "@sanity/functions": "^1.1.0",
+    "sanity": "^5.0.1"
   }
 }
