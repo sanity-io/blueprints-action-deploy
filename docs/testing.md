@@ -123,7 +123,7 @@ All tests run against the staging environment (`sanity.work`).
 - `STACK_ID` - Test stack ID
 - `PROJECT_ID` - Test project ID
 - `ORGANIZATION_ID` - Test organization ID
-- `SLACK_WEBHOOK_URL` - (Optional) Slack webhook for notifications
+- `SLACK_WEBHOOK_URL` - Slack webhook for notifications
 
 ---
 
