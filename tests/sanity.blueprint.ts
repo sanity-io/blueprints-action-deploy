@@ -41,6 +41,9 @@ export default defineBlueprint({
             datasetName: 'test-dataset',
             aclMode: 'public',
             project: process.env.SANITY_PROJECT_ID,
+            lifecycle: {
+                deletionPolicy: 'allow',
+            },
         }),
         defineCorsOrigin({
             name: 'test-cors',
