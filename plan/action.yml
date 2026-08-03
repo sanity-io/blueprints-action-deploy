@@ -32,7 +32,7 @@ runs:
 
   steps:
     - name: Setup Node.js
-      uses: actions/setup-node@v7
+      uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
       with:
         node-version: '24'
 
@@ -66,7 +66,7 @@ runs:
         exit $EXIT_CODE
 
     - name: Output Plan Details To PR Comment
-      uses: actions/github-script@v9
+      uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
       with:
         script: |
           const planOutput = `${{ steps.plan.outputs.result }}`;
