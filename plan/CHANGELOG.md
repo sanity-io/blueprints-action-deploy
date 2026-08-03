@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.2](https://github.com/sanity-io/blueprints-actions/compare/plan-v2.0.1...plan-v2.0.2) (2026-08-03)
+
+
+### Bug Fixes
+
+* pin SHAs for action deps internally ([#47](https://github.com/sanity-io/blueprints-actions/issues/47)) ([ff39598](https://github.com/sanity-io/blueprints-actions/commit/ff3959859a63af7daf975ce5bd29aebf3f10636a))
+
 ## [2.0.1](https://github.com/sanity-io/blueprints-actions/compare/plan-v2.0.0...plan-v2.0.1) (2026-04-06)
 
 
