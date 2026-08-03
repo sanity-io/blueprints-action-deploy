@@ -31,3 +31,22 @@ jobs:
                 exit 1;
               }
           echo "✓ Validation passed!"
+
+      - name: Check ${{ matrix.action }} action dependency pins
+        shell: bash
+        run: |
+          action_file="./${{ matrix.action }}/action.yml"
+          pin_status=0
+
+          while IFS= read -r reference; do
+            case "$reference" in
+              ./* | docker://*) continue ;;
+            esac
+
+            if [[ ! "$reference" =~ ^[^@[:space:]]+@[0-9a-f]{40}$ ]]; then
+              echo "::error file=$action_file::Action dependency '$reference' must use a full-length commit SHA."
+              pin_status=1
+            fi
+          done < <(sed -nE 's/^[[:space:]]*(-[[:space:]]+)?uses:[[:space:]]*([^[:space:]#]+).*$/\2/p' "$action_file")
+
+          exit "$pin_status"
